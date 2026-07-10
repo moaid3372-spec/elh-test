@@ -49,7 +49,9 @@ model User {
 
 
 model Student {
+learningPathId String?
 
+learningPath LearningPath?
   id String @id @default(uuid())
 
 
@@ -235,5 +237,486 @@ model Achievement {
 
 
  createdAt DateTime @default(now())
+model PlacementTest {
+
+  id String @id @default(uuid())
+
+  title String
+
+  grade String
+
+  questions PlacementQuestion[]
+
+}
+
+
+
+model PlacementQuestion {
+
+  id String @id @default(uuid())
+
+
+  question String
+
+  optionA String
+
+  optionB String
+
+  optionC String
+
+  optionD String
+
+
+  correctAnswer String
+
+
+  skill String
+
+
+  testId String
+
+
+  test PlacementTest @relation(
+    fields:[testId],
+    references:[id]
+  )
+
+}
+
+
+
+model PlacementResult {
+
+ id String @id @default(uuid())
+
+
+ studentId String
+
+
+ score Int
+
+
+ level String
+
+
+ createdAt DateTime @default(now())
+
+
+ student Student @relation(
+ fields:[studentId],
+ references:[id]
+ )
+
+}
+}model LearningPath {
+
+  id String @id @default(uuid())
+
+  title String
+
+  description String
+
+  level String
+
+  missions Mission[]
+
+}
+
+
+model Mission {
+
+  id String @id @default(uuid())
+
+  title String
+
+  description String
+
+  order Int
+
+
+  pathId String
+
+
+  path LearningPath @relation(
+    fields:[pathId],
+    references:[id]
+  )
+
+}model World {
+
+  id String @id @default(uuid())
+
+  name String
+
+  description String
+
+  image String?
+
+
+  characters Character[]
+
+  missions Mission[]
+
+}
+
+
+
+model Character {
+
+  id String @id @default(uuid())
+
+
+  name String
+
+  role String
+
+  description String
+
+
+  worldId String
+
+
+  world World @relation(
+    fields:[worldId],
+    references:[id]
+  )
+
+}
+
+
+
+model Reward {
+
+  id String @id @default(uuid())
+
+
+  title String
+
+  type String
+
+
+  points Int
+
+
+  missionId String
+
+
+  mission Mission @relation(
+    fields:[missionId],
+    references:[id]
+  )
+
+}model Mission {
+
+  id String @id @default(uuid())
+
+
+  title String
+
+
+  description String
+
+
+  order Int
+
+
+
+  pathId String
+
+
+  path LearningPath @relation(
+    fields:[pathId],
+    references:[id]
+  )
+
+
+  worldId String?
+
+
+  world World? @relation(
+    fields:[worldId],
+    references:[id]
+  )
+
+
+  rewards Reward[]
+
+}World:
+"The Discovery Island"
+
+الوصف:
+جزيرة يكتشف فيها الطفل اللغة والثقة بالنفس
+
+
+Characters:
+
+1- Leo
+Role:
+The Explorer
+
+2- Mia
+Role:
+The Creative Friend
+
+3- Robo
+Role:
+AI Helper
+
+
+Missions:
+
+Mission 1:
+Welcome to Discovery Island
+
+Mission 2:
+Words Around Me
+
+Mission 3:
+My First Conversation
+
+Mission 4:
+Tell My Storyenum ActivityType {
+
+ STORY
+ QUIZ
+ GAME
+ AI_CHAT
+ VIDEO
+
+}
+
+
+
+model Activity {
+
+ id String @id @default(uuid())
+
+
+ title String
+
+
+ type ActivityType
+
+
+ content String
+
+
+ points Int @default(10)
+
+
+
+ missionId String
+
+
+ mission Mission @relation(
+ fields:[missionId],
+ references:[id]
+ )
+
+
+}model ChatMessage {
+
+ id String @id @default(uuid())
+
+
+ studentId String
+
+
+ role String
+ // STUDENT أو AI
+
+
+ message String
+
+
+ createdAt DateTime @default(now())
+
+
+ student Student @relation(
+ fields:[studentId],
+ references:[id]
+ )
+
+}model Student {
+
+ id String @id @default(uuid())
+
+ userId String @unique
+
+ user User @relation(
+ fields:[userId],
+ references:[id]
+ )
+
+ grade String
+
+
+ xp Int @default(0)
+
+ level Int @default(1)
+
+ streak Int @default(0)
+
+
+ progress Progress[]
+
+ achievements Achievement[]
+
+}model Badge {
+
+ id String @id @default(uuid())
+
+ name String
+
+ description String
+
+ icon String
+
+ requiredXP Int
+
+}
+
+
+model StudentBadge {
+
+ id String @id @default(uuid())
+
+
+ studentId String
+
+ badgeId String
+
+
+ student Student @relation(
+ fields:[studentId],
+ references:[id]
+ )
+
+
+ badge Badge @relation(
+ fields:[badgeId],
+ references:[id]
+ )
+
+}model Parent {
+
+ id String @id @default(uuid())
+
+ userId String @unique
+
+ user User @relation(
+ fields:[userId],
+ references:[id]
+ )
+
+
+children Student[]
+
+}parentId String?
+
+parent Parent? @relation(
+fields:[parentId],
+references:[id]
+)model Teacher {
+
+ id String @id @default(uuid())
+
+ userId String @unique
+
+
+ user User @relation(
+ fields:[userId],
+ references:[id]
+ )
+
+
+ classes ClassRoom[]
+
+}
+
+
+
+model ClassRoom {
+
+ id String @id @default(uuid())
+
+
+ name String
+
+
+ teacherId String
+
+
+ teacher Teacher @relation(
+ fields:[teacherId],
+ references:[id]
+ )
+
+
+ students Student[]
+
+}model StudentclassId String?
+
+
+class ClassRoom? @relation(
+fields:[classId],
+references:[id]
+)model AIProfile {
+
+  id String @id @default(uuid())
+
+  studentId String @unique
+
+  student Student @relation(
+    fields:[studentId],
+    references:[id]
+  )
+
+  vocabulary Int @default(0)
+
+  grammar Int @default(0)
+
+  listening Int @default(0)
+
+  speaking Int @default(0)
+
+  reading Int @default(0)
+
+  confidence Int @default(50)
+
+  motivation Int @default(50)
+
+  recommendedDifficulty Int @default(1)
+
+  updatedAt DateTime @updatedAt
+
+}model AIProfile {
+
+  id String @id @default(uuid())
+
+  studentId String @unique
+
+  student Student @relation(
+    fields:[studentId],
+    references:[id]
+  )
+
+  vocabulary Int @default(0)
+
+  grammar Int @default(0)
+
+  listening Int @default(0)
+
+  speaking Int @default(0)
+
+  reading Int @default(0)
+
+  confidence Int @default(50)
+
+  motivation Int @default(50)
+
+  recommendedDifficulty Int @default(1)
+
+  updatedAt DateTime @updatedAt
 
 }

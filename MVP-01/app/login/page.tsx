@@ -211,4 +211,141 @@ Achievements
 
 );
 
+}"use client";
+
+import {useState} from "react";
+import {useRouter} from "next/navigation";
+
+
+export default function Login(){
+
+
+const router=useRouter();
+
+
+const [username,setUsername]=useState("");
+
+const [password,setPassword]=useState("");
+
+const [message,setMessage]=useState("");
+
+
+
+async function login(e:React.FormEvent){
+
+e.preventDefault();
+
+
+const res =
+await fetch("/api/auth/login",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+username,
+
+password
+
+})
+
+});
+
+
+
+const data =
+await res.json();
+
+
+
+if(res.ok){
+
+localStorage.setItem(
+"elh-user",
+JSON.stringify(data.user)
+);
+
+
+router.push("/dashboard");
+
+
+}else{
+
+setMessage(data.message);
+
+}
+
+
+}
+
+
+
+return (
+
+<form
+onSubmit={login}
+className="
+max-w-md
+mx-auto
+mt-20
+bg-white
+p-8
+rounded-2xl
+shadow-xl
+"
+>
+
+
+<h1 className="text-3xl font-bold mb-6">
+Login ELH
+</h1>
+
+
+
+<input
+className="input"
+placeholder="Username"
+onChange={(e)=>setUsername(e.target.value)}
+/>
+
+
+
+<input
+className="input"
+type="password"
+placeholder="Password"
+onChange={(e)=>setPassword(e.target.value)}
+/>
+
+
+
+<button
+className="
+bg-blue-600
+text-white
+w-full
+py-3
+rounded-xl
+"
+>
+
+Login
+
+</button>
+
+
+
+<p>
+{message}
+</p>
+
+
+</form>
+
+);
+
 }

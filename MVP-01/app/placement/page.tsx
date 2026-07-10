@@ -66,4 +66,183 @@ export default function PlacementTest() {
 
     </main>
   );
+}"use client";
+
+import {useEffect,useState} from "react";
+import {useRouter} from "next/navigation";
+
+
+export default function Placement(){
+
+
+const [test,setTest]=useState<any>();
+
+const [answers,setAnswers]=useState<any>({});
+
+
+const router=useRouter();
+
+
+
+useEffect(()=>{
+
+fetch("/api/placement")
+.then(r=>r.json())
+.then(setTest);
+
+
+},[]);
+
+
+
+function submit(){
+
+
+console.log(answers);
+
+
+// لاحقا يرسل للـ AI Engine
+
+
+router.push("/dashboard");
+
+
+}
+
+
+
+if(!test)
+
+return <div className="p-10">
+Loading Test...
+</div>
+
+
+
+return (
+
+<div className="
+max-w-3xl
+mx-auto
+p-8
+">
+
+
+<h1 className="
+text-3xl
+font-bold
+mb-8
+">
+
+ELH Discovery Test
+
+</h1>
+
+
+
+{test.questions.map(
+(q:any,index:number)=>(
+
+
+<div
+key={q.id}
+className="
+bg-white
+shadow
+rounded-xl
+p-5
+mb-5
+"
+>
+
+
+<h2 className="font-bold mb-4">
+
+{index+1}. {q.question}
+
+</h2>
+
+
+
+{[
+q.optionA,
+q.optionB,
+q.optionC,
+q.optionD
+
+].map(option=>(
+
+
+<label
+key={option}
+className="block mb-2"
+>
+
+
+<input
+
+type="radio"
+
+name={q.id}
+
+onChange={()=>
+
+
+setAnswers({
+
+...answers,
+
+[q.id]:option
+
+})
+
+
+}
+
+/>
+
+
+{" "}
+
+{option}
+
+
+</label>
+
+
+))}
+
+
+</div>
+
+
+)
+
+)}
+
+
+
+<button
+
+onClick={submit}
+
+className="
+bg-blue-600
+text-white
+px-8
+py-3
+rounded-xl
+"
+
+>
+
+Finish Test
+
+</button>
+
+
+</div>
+
+);
+
 }

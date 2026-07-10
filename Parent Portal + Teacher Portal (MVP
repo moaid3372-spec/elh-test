@@ -1,0 +1,13 @@
+Student
+   │
+   ├── Parent Dashboard
+   │       ├── Progress
+   │       ├── XP & Level
+   │       ├── Weak Skills
+   │       └── AI Recommendations
+   │
+   └── Teacher Dashboard
+           ├── Class
+           ├── Assignments
+           ├── Reports
+           └── Student Insights
