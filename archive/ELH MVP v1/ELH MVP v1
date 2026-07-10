@@ -1,0 +1,21 @@
+ELH-MVP
+│
+├── app
+│   ├── page.tsx
+│   ├── register
+│   │   └── page.tsx
+│   ├── login
+│   │   └── page.tsx
+│   └── dashboard
+│       └── page.tsx
+│
+├── components
+│   ├── Navbar.tsx
+│   ├── FormInput.tsx
+│   └── Button.tsx
+│
+├── lib
+│   └── validation.ts
+│
+└── types
+    └── user.ts
