@@ -1,0 +1,239 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+
+enum Role {
+  STUDENT
+  PARENT
+  TEACHER
+  ADMIN
+}
+
+
+
+model User {
+
+  id String @id @default(uuid())
+
+  name String
+
+  username String @unique
+
+  password String
+
+  email String? @unique
+
+  phone String?
+
+  role Role @default(STUDENT)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+
+  student Student?
+
+  parent Parent?
+
+}
+
+
+
+model Student {
+
+  id String @id @default(uuid())
+
+
+  userId String @unique
+
+  user User @relation(
+    fields:[userId],
+    references:[id]
+  )
+
+
+  grade String
+
+
+  points Int @default(0)
+
+  level Int @default(1)
+
+
+  progress Progress[]
+
+
+  achievements Achievement[]
+
+
+}
+
+
+
+model Parent {
+
+  id String @id @default(uuid())
+
+
+  userId String @unique
+
+  user User @relation(
+    fields:[userId],
+    references:[id]
+  )
+
+
+  children Student[]
+
+}
+
+
+
+model Grade {
+
+ id String @id @default(uuid())
+
+
+ name String
+
+
+ units Unit[]
+
+}
+
+
+
+model Unit {
+
+ id String @id @default(uuid())
+
+
+ title String
+
+
+ gradeId String
+
+ grade Grade @relation(
+ fields:[gradeId],
+ references:[id]
+ )
+
+
+ lessons Lesson[]
+
+}
+
+
+
+model Lesson {
+
+ id String @id @default(uuid())
+
+
+ title String
+
+
+ description String
+
+
+ unitId String
+
+
+ unit Unit @relation(
+ fields:[unitId],
+ references:[id]
+ )
+
+
+ activities Activity[]
+
+}
+
+
+
+model Activity {
+
+ id String @id @default(uuid())
+
+
+ title String
+
+
+ type String
+
+
+ lessonId String
+
+
+ lesson Lesson @relation(
+ fields:[lessonId],
+ references:[id]
+ )
+
+
+}
+
+
+
+model Progress {
+
+ id String @id @default(uuid())
+
+
+ studentId String
+
+
+ student Student @relation(
+ fields:[studentId],
+ references:[id]
+ )
+
+
+ lessonId String
+
+
+ completed Boolean @default(false)
+
+
+ score Int?
+
+
+
+ createdAt DateTime @default(now())
+
+}
+
+
+
+model Achievement {
+
+ id String @id @default(uuid())
+
+
+ title String
+
+
+ description String
+
+
+ studentId String
+
+
+ student Student @relation(
+ fields:[studentId],
+ references:[id]
+ )
+
+
+ createdAt DateTime @default(now())
+
+}
